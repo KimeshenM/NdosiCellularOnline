@@ -96,7 +96,9 @@ public class loginToNdosiCellularOnline {
         //new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.elementToBeClickable(phoneOption));
         //driver.findElement(phoneOption).click();
 
-        //Thread.sleep(2000);
+        //Thread.sleep(2000); //<<<<<<< Note: thread.sleep wont work here as I haven't put throw.InterruptedException in the
+        // "method signature" of the test method. Therefore, I need to use WebDriverWait to wait for
+        // the "Phone" option to be clickable before clicking on it.
 
         //driver.findElement(By.xpath("//button[.//text()[contains(.,'Phone')]]")).click();
         //Note: The above code may not work because the "Phone" option may not be immediately clickable after clicking
@@ -128,10 +130,27 @@ public class loginToNdosiCellularOnline {
         brandDropDown.selectByVisibleText("Apple");
 
         //Need to add assertions to verify that the "Apple" option is selected successfully
-        driver.findElement(By.xpath("//*[@id=\"device-preview\"]/div/div/div[2]")).isDisplayed();
+        //driver.findElement(By.xpath("//*[@id=\"device-preview\"]/div/div/div[2]")).isDisplayed();
+        //Note, the above works and should work as an assertion as xpath is correct with position,
+        // but it is not a good practice to use xpath with position as it may change based on the UI changes.
+        // Therefore, it is better to use a more reliable locator strategy, such as using the text of the element
+        // or using a unique attribute of the element. HOWEVER
+        driver.findElement(By.xpath("//*[contains(text(), 'Apple')]")).getText().equals("Apple");
+        //wont the above assert the Apple from the dropdown rather than the Apple from the device preview??
+
 
         //Clicking the 128GB option from the Storage option
-        driver.findElement(By.xpath("//*[@id=\"inventory-form-grid\"]/div[4]/div/label[2]")).click();
+       driver.findElement(By.xpath("//*[@id=\"inventory-form-grid\"]/div[4]/div/label[2]")).click();
+
+       //Need to add assertions to verify that the "128GB" option is selected successfully
+        Assert.assertTrue(driver.findElement(By.xpath("//*[@id=\"device-preview\"]/div/div/div[3]/strong[2]")).isDisplayed());
+        //Note: the above assertion may not be the best as positions may change, I should
+        // use contains text instead of position(I only worry that it may reference to the dropdown)
+        // this may be a blonde moment for me
+
+
+
+
 
 
 
