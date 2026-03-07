@@ -48,8 +48,7 @@ public class loginToNdosiCellularOnline {
         // Print the welcome message to the console
         System.out.println(myCoursesText);
         // Assert that the welcome message is correct
-        Assert.assertEquals(myCoursesText,"\uD83D\uDCDA My Courses");
-
+        Assert.assertEquals(myCoursesText, "\uD83D\uDCDA My Courses");
 
         //Note: The "Welcome back, Kimo!" needs to be changed so that it may be used by other users as well. It is currently hardcoded to only work for the user "Kimo".
 
@@ -61,9 +60,9 @@ public class loginToNdosiCellularOnline {
         // Assert that the welcome message is correct
         System.out.println(WelcomeBackText);
         // Assert that the welcome message is correct
-        Assert.assertEquals(WelcomeBackText,"Welcome back, Kimo! \uD83D\uDC4B");
+        Assert.assertEquals(WelcomeBackText, "Welcome back, Kimo! \uD83D\uDC4B");
 
-        //Navigating to the required page
+        //Navigating to the required page//
 
         // Click on the Learn button (Would this be a drop down menu or a button??)
         //driver.findElement(By.xpath("//*[@id=\"app-root\"]/nav/div[1]/div[2]/div[1]/button")).click();
@@ -76,7 +75,6 @@ public class loginToNdosiCellularOnline {
         // Click on the learning Materials button
         //driver.findElement(By.xpath("//*[@id="app-root"]/nav/div[1]/div[2]/div[1]/div/button[2]")).click();
         //driver.findElement(By.xpath("//*[contains(text(),'Learning Materials')]")).click();
-
 
         //The below code is used to wait for the "Learning Materials" button to be clickable before clicking on it.
         //This is necessary because the "Learning Materials" button may not be immediately clickable after clicking
@@ -138,23 +136,131 @@ public class loginToNdosiCellularOnline {
         driver.findElement(By.xpath("//*[contains(text(), 'Apple')]")).getText().equals("Apple");
         //wont the above assert the Apple from the dropdown rather than the Apple from the device preview??
 
-
         //Clicking the 128GB option from the Storage option
-       driver.findElement(By.xpath("//*[@id=\"inventory-form-grid\"]/div[4]/div/label[2]")).click();
+        By storage128 = By.id("storage-128GB");
+        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.elementToBeClickable(storage128));
+        driver.findElement(storage128).click();
 
-       //Need to add assertions to verify that the "128GB" option is selected successfully
-        Assert.assertTrue(driver.findElement(By.xpath("//*[@id=\"device-preview\"]/div/div/div[3]/strong[2]")).isDisplayed());
+        //Need to add assertions to verify that the "128GB" option is selected successfully
+        Assert.assertTrue(driver.findElement(By.xpath("//*[@id=\"device-preview\"]/div/div/div[3]/strong[2]")).isDisplayed()); //NOTE * IS FOR ENTIRE PROJECT
         //Note: the above assertion may not be the best as positions may change, I should
         // use contains text instead of position(I only worry that it may reference to the dropdown)
         // this may be a blonde moment for me
 
+        new WebDriverWait(driver, Duration.ofSeconds(5));
 
+        //Verifying that the unit price is displayed correctly
+        //Assert.assertEquals(driver.findElement(By.id("unit-price-value")));
 
+        //selecting the color dropdown
+        driver.findElement(By.id("color")).click();
 
+        //Selecting the blue option
+        Select colorDropDown = new Select(driver.findElement(By.id("color")));
+        colorDropDown.selectByVisibleText("Blue");
 
+        //Need to add assertions to verify that the "Blue" option is selected successfully
+        //driver.findElement(By.xpath("//strong[contains(text(),'Blue')]")).isDisplayed();
+        //Assert.assertEquals(driver.findElement(By.xpath("//strong[contains(text(),'Blue')]")).getText(), "Blue");
 
+        String colorPreviewText = driver.findElement(By.xpath("//option[contains(text(),\"Blue\")]")).getText();
+        System.out.println(colorPreviewText);
+        Assert.assertEquals(colorPreviewText, "Blue");
+        //The above may be referencing the dropdown option rather than the color preview
 
+        //Entering the quantity
+        driver.findElement(By.id("quantity")).sendKeys("2");
 
+        //Need to add assertions to verify that the quantity is entered successfully
+        //getText() does not work for input fields, we need to use getAttribute("value") instead
+        String quantityValue = driver.findElement(By.id("quantity-value")).getText();
+        System.out.println(quantityValue);
+        Assert.assertEquals(quantityValue, "2");
+
+        //Entering the address
+        driver.findElement(By.xpath("//*[@id=\"address\"]")).sendKeys("123 Test Street");
+        //Need to add assertions to verify that the address is entered successfully
+        String address = driver.findElement(By.xpath("//*[@id=\"address\"]")).getAttribute("value");
+        System.out.println(address);
+        Assert.assertEquals(address, "123 Test Street");
+
+        //Clicking the Next button to proceed to the inventory page
+        driver.findElement(By.id("inventory-next-btn")).click();
+
+        //Need to add assertions to verify that the user is navigated to the inventory page successfully
+        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOfElementLocated(By.id("review-section-title")));
+        String inventoryPageText = driver.findElement(By.id("review-section-title")).getText();
+        System.out.println(inventoryPageText);
+        Assert.assertEquals(inventoryPageText, "REVIEW");
+
+        //Clicking the Express Shipping option
+        driver.findElement(By.id("shipping-express")).click();
+
+        //Need to add assertions to verify that the "Express Shipping" option is selected successfully
+        String shippingAmt = driver.findElement(By.id("breakdown-shipping-value")).getText();
+        System.out.println(shippingAmt);
+        Assert.assertEquals(shippingAmt, "R25.00");
+
+        //Clicking the 1 Year Warranty option
+        driver.findElement(By.id("warranty-option-1yr")).click();
+        //Need to add assertions to verify that the "1 Year Warranty" option is selected successfully (R25.00)
+        driver.findElement(By.id("breakdown-warranty-value")).isDisplayed();
+        //Note the below assertion does not display in terminal nor the above
+        Assert.assertEquals(driver.findElement(By.id("breakdown-warranty-value")).getText(), "R49.00");
+
+        //The below code works and displays the warranty amount in the terminal.
+        String warrantyAmt = driver.findElement(By.id("breakdown-warranty-value")).getText();
+        System.out.println(warrantyAmt);
+        Assert.assertEquals(warrantyAmt, "R49.00");
+
+        //Entering the discount code
+        driver.findElement(By.id("discount-code")).sendKeys("SAVE10");
+        //Clicking the Apply button
+        driver.findElement(By.id("apply-discount-btn")).click();
+
+        //Assertion that the discount code is applied
+        String DiscountAmt = driver.findElement(By.id("discount-feedback")).getText();
+        System.out.println(DiscountAmt);
+        Assert.assertEquals(DiscountAmt, "Code SAVE10 applied: -10%");
+
+        //Clicking the Purchase button to complete the purchase
+        driver.findElement(By.id("purchase-device-btn")).click();
+
+        //Waiting for the order successful toast message to be visible after clicking the Purchase button
+        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"purchase-success-toast\"]/div[1]/h4")));
+
+        //Assertion to verify that the order successful toast message is displayed correctly
+        String orderSuccessfulText = driver.findElement(By.xpath("//*[@id=\"purchase-success-toast\"]/div[1]/h4")).getText();
+        System.out.println(orderSuccessfulText);
+        Assert.assertEquals(orderSuccessfulText, "ORDER SUCCESSFUL! \uD83C\uDF89");
+
+        //clicking the View Invoice button to navigate to the invoice page
+        driver.findElement(By.id("view-history-btn")).click();
+
+        //waiting for the invoice history page to be visible after clicking the View Invoice button
+        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOfElementLocated(By.id("invoice-history-title")));
+
+        //Assertion to verify that the user is navigated to the invoice history page successfully
+        String invoiceHistoryText = driver.findElement(By.id("invoice-history-title")).getText();
+        System.out.println(invoiceHistoryText);
+        Assert.assertEquals(invoiceHistoryText, "\uD83D\uDCC4 Invoice History");
+
+        new WebDriverWait(driver, Duration.ofSeconds(5));
+
+        //Clicking the View Invoice button to view the invoice details of the order
+        //driver.findElement(By.xpath("//id[contains(text(), '\\uD83D\\uDC41\\uFE0F View')]")).click();
+
+        By viewBtn = By.xpath("//button[.//text()[contains(.,'\uD83D\uDC41\uFE0F View')]]");
+        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.elementToBeClickable(viewBtn));
+        driver.findElement(viewBtn).click();
+
+        //Waiting for the invoice details page to be visible after clicking the View Invoice button
+        new  WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//class[text()[contains(.,'Total: R930.60')]]")));
+
+        //Assertion to verify that the user is navigated to the invoice details page successfully
+        String invoiceDetailsText = driver.findElement(By.xpath("//class[text()[contains(.,'Total: R930.60')]]")).getText();
+        System.out.println(invoiceDetailsText);
+        Assert.assertEquals(invoiceDetailsText, "Total: R930.60");
 
 
 
@@ -165,5 +271,14 @@ public class loginToNdosiCellularOnline {
 
 
     }
+
+
+
+    @Test(alwaysRun = true)
+    public void tearDown() {
+    if (driver != null) {
+        driver.quit();
+    }
+}
 
 }
