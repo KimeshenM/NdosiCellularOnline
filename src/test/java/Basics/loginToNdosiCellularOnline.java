@@ -261,8 +261,8 @@ public class loginToNdosiCellularOnline {
         String invoiceDetailsText = driver.findElement(By.xpath("//class[text()[contains(.,'Total: R930.60')]]")).getText();
         System.out.println(invoiceDetailsText);
         Assert.assertEquals(invoiceDetailsText, "Total: R930.60");
-
-
+ll
+bsdbhd
 
 
 

@@ -10,11 +10,11 @@ public class LoginPage {
 
     WebDriver driver;
 
-    //Not needed because used in BaseTest class
-    //public LoginPage(WebDriver driver) {
-        //this.driver = driver;
-        //PageFactory.initElements(driver.this);
+    public LoginPage(WebDriver driver) {
+        this.driver = driver;
+        PageFactory.initElements(driver, this);
     }
+
 
     @FindBy(xpath = "//*[@id=\"app-root\"]/nav/div[1]/div[3]/button")
     WebElement loginButton;

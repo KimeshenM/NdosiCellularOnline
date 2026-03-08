@@ -1,7 +1,6 @@
 package Tests;
 
 import Base.BaseTest;
-import Pages.LoginPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -16,8 +15,6 @@ public class LoginTest extends BaseTest {
     @Test
     public void loginWithValidCredentials() {
 
-        LoginPage.clickLoginButton();
-        LoginPage.enterEmailAddress("kimoslice@gmail.com");
 
 
 
