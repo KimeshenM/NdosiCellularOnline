@@ -2,6 +2,7 @@ package Base;
 
 import Utilities.BrowserFactory;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.PageFactory;
 
 public class BaseTest {
 
@@ -11,4 +12,8 @@ public class BaseTest {
     public final String BrowserChoice = "chrome";
 
     public final WebDriver driver = browserFactory.startBrowser(BrowserChoice, url);
+
+
+
+
 }
